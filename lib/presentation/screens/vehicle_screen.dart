@@ -152,7 +152,30 @@ class _VehicleScreenState extends State<VehicleScreen> {
 
           if (state is VehicleError) {
             return Center(
-              child: Text(state.message, style: const TextStyle(color: AppColors.red)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, color: AppColors.red, size: 48.0),
+                    const SizedBox(height: 16.0),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: AppColors.red, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 20.0),
+                    ElevatedButton(
+                      onPressed: () => context.read<VehicleBloc>().add(LoadVehicles()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.cyan,
+                        foregroundColor: Colors.black,
+                      ),
+                      child: const Text('COBA LAGI', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
             );
           }
 

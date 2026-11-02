@@ -1,3 +1,5 @@
+import 'package:sqflite/sqflite.dart';
+
 import '../../domain/models/discipline_type.dart';
 import '../../domain/models/race_session.dart';
 import '../../domain/models/telemetry_point.dart';
@@ -18,6 +20,7 @@ class RaceSessionRepositoryImpl implements RaceSessionRepository {
       await txn.insert(
         'RaceSessions',
         session.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
       );
 
       final batch = txn.batch();

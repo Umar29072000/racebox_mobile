@@ -92,6 +92,8 @@ class RaceTimerBloc extends Bloc<RaceTimerEvent, RaceTimerState> {
   ) async {
     await audioCue.init();
     await WakelockService.enable();
+    await ForegroundServiceManager.init();
+    await ForegroundServiceManager.startService();
 
     // Load default vehicle
     final defaultVehicle = await vehicleRepo.getDefaultVehicle();
@@ -99,12 +101,10 @@ class RaceTimerBloc extends Bloc<RaceTimerEvent, RaceTimerState> {
     // Load persistent user settings
     double savedThreshold = state.triggerThresholdG;
     bool savedRollout = state.oneFootRolloutEnabled;
-    bool savedPocket = state.isPocketMode;
     try {
       final prefs = await SharedPreferences.getInstance();
       savedThreshold = prefs.getDouble('racebox_trigger_sensitivity_g') ?? savedThreshold;
       savedRollout = prefs.getBool('racebox_one_foot_rollout') ?? savedRollout;
-      savedPocket = prefs.getBool('racebox_pocket_mode') ?? savedPocket;
     } catch (_) {}
 
     emit(state.copyWith(
@@ -112,7 +112,7 @@ class RaceTimerBloc extends Bloc<RaceTimerEvent, RaceTimerState> {
       isSimulated: event.isSimulated,
       triggerThresholdG: savedThreshold,
       oneFootRolloutEnabled: savedRollout,
-      isPocketMode: savedPocket,
+      isPocketMode: true,
     ));
 
     await _initDataSources(isSimulated: event.isSimulated);
@@ -822,13 +822,10 @@ class RaceTimerBloc extends Bloc<RaceTimerEvent, RaceTimerState> {
     TogglePocketMode event,
     Emitter<RaceTimerState> emit,
   ) async {
-    if (event.enabled) {
-      await ForegroundServiceManager.init();
-      await ForegroundServiceManager.startService();
-    } else {
-      await ForegroundServiceManager.stopService();
-    }
-    emit(state.copyWith(isPocketMode: event.enabled));
+    // Mode saku & latar belakang selalu aktif tertanam
+    await ForegroundServiceManager.init();
+    await ForegroundServiceManager.startService();
+    emit(state.copyWith(isPocketMode: true));
   }
 
   void _onSetActiveVehicle(

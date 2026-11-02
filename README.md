@@ -115,8 +115,6 @@ racebox-mobile/
 │   │   ├── screens/                 # Splash, Race HUD, History, Detail Telemetri, Garage, Settings
 │   │   └── widgets/                 # TelemetryChartWidget, SplitTimesTable, DigitalHudMetric
 │   └── main.dart                    # Entry point aplikasi & Inisialisasi Service
-├── test/
-│   └── unit/                        # 24 Unit Test (FSM, Sensor Fusion, Interpolasi, Persistensi)
 └── pubspec.yaml                     # Manifest dependensi Flutter
 ```
 
@@ -139,22 +137,11 @@ stateDiagram-v2
 
 ---
 
-## 🧪 Pengujian Unit & Validasi Kualitas
-
-Aplikasi telah divalidasi dengan rangkaian pengujian unit otomatis mencakup:
-* **Anti-Vibration Rejection:** Getaran mesin stasioner 0.22G tidak memicu stopwatch.
-* **Anti-Jitter Filtering:** Fluktuasi koordinat GPS saat diam (1.2 km/j) tidak memicu start.
-* **Sub-Millisecond Interpolation:** Waktu finis 201m diuji matematis tepat 8.00s pada pengujian interpolasi lintasan.
-* **Reset Bersih Sesi:** Memastikan seluruh pos *split time* (60ft, 100m, 201m, 402m, 0-100) ter-reset bersih pada setiap tarikan baru.
-
-Jalankan pengujian unit melalui terminal:
-```bash
-flutter test test/unit/
-```
+## 🔍 Audit Kualitas Kode
 
 Jalankan audit linter:
 ```bash
-flutter analyze
+dart analyze lib/
 ```
 
 ---
@@ -183,14 +170,11 @@ flutter analyze
    flutter run
    ```
 
-4. **Kompilasi APK Debug / Release:**
+4. **Kompilasi APK Release:**
    ```bash
-   # Debug APK
-   flutter build apk --debug
-
-   # Production App Bundle (untuk rilis Google Play Store)
-   flutter build appbundle --release
+   flutter build apk --release
    ```
+   > File APK release universal akan tersimpan di: `build/app/outputs/flutter-apk/app-release.apk` (kompatibel langsung untuk semua smartphone Android).
 
 ---
 

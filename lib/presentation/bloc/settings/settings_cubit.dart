@@ -12,7 +12,7 @@ class SettingsState extends Equatable {
   const SettingsState({
     this.soundEnabled = true,
     this.simulationMode = false,
-    this.pocketModeEnabled = false,
+    this.pocketModeEnabled = true,
     this.oneFootRolloutEnabled = false,
     this.triggerSensitivityG = 4.0,
   });
@@ -59,14 +59,13 @@ class SettingsCubit extends Cubit<SettingsState> {
       final prefs = await SharedPreferences.getInstance();
       final sound = prefs.getBool(_keySound) ?? true;
       final simulation = prefs.getBool(_keySimulation) ?? false;
-      final pocket = prefs.getBool(_keyPocket) ?? false;
       final rollout = prefs.getBool(_keyRollout) ?? false;
       final sensitivity = prefs.getDouble(_keySensitivity) ?? 4.0;
 
       emit(state.copyWith(
         soundEnabled: sound,
         simulationMode: simulation,
-        pocketModeEnabled: pocket,
+        pocketModeEnabled: true,
         oneFootRolloutEnabled: rollout,
         triggerSensitivityG: sensitivity,
       ));

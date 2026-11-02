@@ -40,16 +40,7 @@ class SettingsScreen extends StatelessWidget {
 
               const SizedBox(height: 16.0),
               _buildSectionHeader('MODE OPERASIONAL'),
-              _buildSwitchTile(
-                title: 'Mode Saku / Latar Belakang',
-                subtitle: 'Menjalankan notifikasi mengambang (Foreground Service) terus aktif. GPS dan sensor akselerasi tetap membaca tarikan saat HP berada di dalam saku jaket dengan layar mati.',
-                value: state.pocketModeEnabled,
-                activeColor: AppColors.cyan,
-                onChanged: (val) {
-                  context.read<SettingsCubit>().togglePocketMode(val);
-                  context.read<RaceTimerBloc>().add(TogglePocketMode(val));
-                },
-              ),
+              _buildEmbeddedPocketModeCard(),
               _buildSensitivityCard(context, state),
               _buildSwitchTile(
                 title: 'Isyarat Suara Beep (TWS / Speaker)',
@@ -178,6 +169,89 @@ class SettingsScreen extends StatelessWidget {
             ],
           ),
           ?extraAction,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmbeddedPocketModeCard() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.all(14.0),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: AppColors.cyan.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: AppColors.cyan.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: const Icon(
+              Icons.screen_lock_portrait,
+              color: AppColors.cyan,
+              size: 24.0,
+            ),
+          ),
+          const SizedBox(width: 12.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Mode Saku & Latar Belakang',
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.green.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(6.0),
+                        border: Border.all(color: AppColors.green),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle, size: 10.0, color: AppColors.green),
+                          SizedBox(width: 4.0),
+                          Text(
+                            'AKTIF OTOMATIS',
+                            style: TextStyle(
+                              color: AppColors.green,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 9.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6.0),
+                const Text(
+                  'Layanan latar belakang (Foreground Task) tertanam otomatis. GPS & sensor 100Hz tetap aktif mencatat akselerasi saat layar HP mati di dalam saku jaket balap.',
+                  style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 11.5,
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

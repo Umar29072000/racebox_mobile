@@ -58,7 +58,7 @@ class RaceTimerState extends Equatable {
     this.split0To100,
     this.oneFootRolloutEnabled = false,
     this.oneFootRolloutSec,
-    this.isPocketMode = false,
+    this.isPocketMode = true,
     this.isSimulated = false,
     this.triggerThresholdG = 4.0,
     this.lastFinishedSession,

@@ -1,3 +1,5 @@
+import 'package:sqflite/sqflite.dart';
+
 import '../../domain/models/vehicle_profile.dart';
 import '../../domain/repositories/vehicle_repository.dart';
 import '../datasources/database/app_database.dart';
@@ -37,11 +39,32 @@ class VehicleRepositoryImpl implements VehicleRepository {
   @override
   Future<void> saveVehicle(VehicleProfile vehicle) async {
     final db = await _dbProvider.database;
-    await db.insert(
+    final exists = await db.query(
       'VehicleProfiles',
-      vehicle.toMap(),
-      conflictAlgorithm: null, // Let SQLite handle upsert or replace
+      columns: ['id'],
+      where: 'id = ?',
+      whereArgs: [vehicle.id],
+      limit: 1,
     );
+
+    if (vehicle.isDefault) {
+      await db.update('VehicleProfiles', {'isDefault': 0});
+    }
+
+    if (exists.isNotEmpty) {
+      await db.update(
+        'VehicleProfiles',
+        vehicle.toMap(),
+        where: 'id = ?',
+        whereArgs: [vehicle.id],
+      );
+    } else {
+      await db.insert(
+        'VehicleProfiles',
+        vehicle.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
   }
 
   @override
